@@ -1,0 +1,21 @@
+{
+  "name": "@me5on/martis",
+  "version": "0.0.2+8",
+  "description": "",
+  "type": "module",
+  "main": "./src/index.js",
+  "repository": "https://github.com/me5on/martis",
+  "author": {
+    "name": "azder",
+    "email": "azhder@gmail.com",
+    "url": ""
+  },
+  "license": "MIT",
+  "keywords": [],
+  "scripts": {
+    "bump": "node ../dv/src/index.js bump --on-diff"
+  },
+  "dependencies": {
+    "@me5on/is": "^0.0.8"
+  }
+}

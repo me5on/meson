@@ -1,0 +1,14 @@
+<svg width="512" height="512" viewBox="0 0 135.467 135.467" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#f7df1e" stroke="#404040" stroke-opacity=".271" stroke-width="8.466872" d="m12.802 89.937.388-45.346 32.34-31.79 45.345.39 31.79 32.338-.389 45.346-32.339 31.79-45.346-.389z"/>
+  <path style="-inkscape-stroke:none" fill="#606060" fill-rule="evenodd" d="m45.652 12.752-.246.1 44.408 109.863.247-.1z" color="#000"/>
+  <path style="-inkscape-stroke:none" fill="#606060" fill-rule="evenodd" d="m45.396 12.8-.937 109.475.266.002.937-109.474zm45.346.39-.937 109.474.265.002.938-109.475z" color="#000"/>
+  <path style="-inkscape-stroke:none" fill="#606060" fill-rule="evenodd" d="M-.682 67.6v.267h135.467V67.6z" color="#000"/>
+  <path style="-inkscape-stroke:none" fill="#606060" fill-rule="evenodd" d="m131.934 66.55 3.205 1.179-3.205 1.178a2.005 2.005 0 0 0 0-2.357zm-17.026-46.68-95.79 95.788.189.188 95.789-95.79z" color="#000"/>
+  <path style="-inkscape-stroke:none" fill="#606060" fill-rule="evenodd" d="m112.149 21.142 3.1-1.433-1.433 3.1a2.005 2.005 0 0 0-1.667-1.667z" color="#000"/>
+  <g fill="#606060" fill-rule="evenodd" color="#000">
+    <path style="-inkscape-stroke:none" d="M59.162.172v135.467h.268V.172Z"/>
+    <path style="-inkscape-stroke:none" d="M58.113 3.024 59.29-.182l1.18 3.206a2.005 2.005 0 0 0-2.358 0z"/>
+  </g>
+  <path fill="none" stroke="#404040" stroke-width="8.466872" d="m12.802 89.937.388-45.346 32.34-31.79 45.345.39 31.79 32.338-.389 45.346-32.339 31.79-45.346-.389z"/>
+  <path d="M264.864 202.95h37.109v183.789q6.055-1.563 12.305-3.907 17.382-6.836 36.523-20.117v36.719q-18.36 11.133-37.11 16.601-18.554 5.47-38.867 5.47-36.328 0-58.007-18.75-21.485-18.75-21.485-50.196 0-14.844 6.64-27.54 6.446-12.89 24.806-30.859l17.187-16.796q13.477-12.891 17.188-21.094 3.71-8.203 3.71-20.117zm38.476-78.32v49.609h-39.648v-49.61Zm-38.476 262.89v-83.985l-8.79 8.79q-12.109 11.523-16.601 20.117-4.688 8.593-4.688 18.164 0 17.383 12.891 28.125 7.227 6.054 17.188 8.789z" transform="matrix(.26458 0 0 .26458 -4.516 -4.516)" aria-label="⸘" style="line-height:1.25;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:none" font-size="400" font-family="Arial" fill="#404040"/>
+</svg>

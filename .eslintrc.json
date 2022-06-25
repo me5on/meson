@@ -1,0 +1,32 @@
+{
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2022
+  },
+  "extends": [
+    "@sloy/eslint-config-recommended",
+    "@sloy/eslint-config-import"
+  ],
+  "plugins": [
+    "simple-import-sort",
+    "import"
+  ],
+  "globals": {
+    "BigInt": false,
+    "Promise": false,
+    "Symbol": false
+  },
+
+  "rules": {
+    "no-shadow": [
+      "error",
+      {
+        "builtinGlobals": true,
+        "allow": [
+          "name"
+        ]
+      }
+    ],
+    "import/no-extraneous-dependencies": "off"
+  }
+}

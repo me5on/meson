@@ -1,0 +1,19 @@
+{
+  "name": "@me5on/fn",
+  "version": "0.1.0+36",
+  "description": "FN",
+  "repository": "https://github.com/me5on/fn",
+  "author": {
+    "name": "azder",
+    "email": "azhder@gmail.com"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "scripts": {
+    "bump": "node ../dv/src/index.js bump --on-diff"
+  }
+}

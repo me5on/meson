@@ -1,0 +1,45 @@
+{
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "pak/*"
+  ],
+  "scripts": {
+    "esl:once": "eslint --ignore-path .gitignore ./pak/*/",
+    "esl:wtch": "nodemon --exec eslint --ignore-path .gitignore ./pak/*/",
+    "esl:ofix": "eslint --ignore-path .gitignore --fix ./pak/*/",
+    "esl:wfix": "nodemon --exec eslint --ignore-path .gitignore --fix ./pak/*/",
+    "jst:ocvr": "NODE_OPTIONS=--experimental-vm-modules jest --coverage=true",
+    "jst:wcvr": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest --watch-all --coverage=true",
+    "jst:once": "NODE_OPTIONS=--experimental-vm-modules jest --coverage=false",
+    "jst:wtch": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest --watch --coverage=false",
+    "smp:once": "eslint -c index.js ./doc/samples",
+    "smp:wtch": "nodemon --exec npm run smp:once",
+    "srv:covr": "npx http-server ./coverage/lcov-report/ -c-1 -p 0 ",
+    "ncu:chck": "npx -ws npm-check-updates",
+    "ncu:cdoc": "npx -ws npm-check-updates --doctor",
+    "ncu:runu": "npx -ws npm-check-updates -u",
+    "ncu:rund": "npx -ws npm-check-updates -u --doctor",
+    "ncu:runm": "npx -ws npm-check-updates -u --target minor",
+    "ncu:runp": "npx -ws npm-check-updates -u --target patch",
+    "reformat": "npm run esl:ofix",
+    "prepare": "husky install",
+    "bump": "npm run bump -ws",
+    "test": "npm run jst:ocvr",
+    "start": "npm run jst:wcvr"
+  },
+  "devDependencies": {
+    "@jest/globals": "^28.1.1",
+    "@sloy/eslint-config-import": "^0.0.1",
+    "@sloy/eslint-config-recommended": "^0.1.1",
+    "@sloy/jest-setup": "^0.0.1",
+    "eslint": "^8.18.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "http-server": "^14.1.1",
+    "husky": "^8.0.0",
+    "jest": "^28.1.1",
+    "nodemon": "^2.0.18",
+    "npm-check-updates": "^14.1.1"
+  }
+}

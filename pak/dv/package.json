@@ -1,0 +1,19 @@
+{
+  "name": "@me5on/dv",
+  "version": "0.0.3+18",
+  "description": "DV",
+  "type": "module",
+  "main": "./src/index.js",
+  "bin": "./src/index.js",
+  "private": false,
+  "author": {
+    "name": "azder",
+    "email": "azhder@gmail.com"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "repository": "https://github.com/me5on/dv",
+  "scripts": {
+    "bump": "node ./src/index.js bump --on-diff"
+  }
+}

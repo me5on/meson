@@ -1,0 +1,19 @@
+{
+  "name": "@me5on/to",
+  "version": "0.1.0+17",
+  "description": "TO",
+  "repository": "https://github.com/me5on/to",
+  "author": {
+    "name": "azder",
+    "email": "azhder@gmail.com"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "main": "./src/to/to.mod.js",
+  "exports": "./src/to/to.mod.js",
+  "scripts": {
+    "bump": "node ../dv/src/index.js bump --on-diff"
+  }
+}

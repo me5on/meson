@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# shellcheck source=./_/husky.sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run reformat
+npm test
+npm run bump
+
+npm i --package-lock-only
+
+git add pak/*/package.json
+git add pak/*/ver.json
+git add package-lock.json

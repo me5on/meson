@@ -1,0 +1,20 @@
+{
+  "name": "@me5on/crayon",
+  "version": "0.0.1+21",
+  "description": "crayon color console",
+  "type": "module",
+  "main": "./src/index.js",
+  "repository": "https://github.com/me5on/crayon",
+  "author": {
+    "name": "azder",
+    "email": "azhder@gmail.com"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "@me5on/rebus": "^0.0.2+20"
+  },
+  "scripts": {
+    "bump": "node ../dv/src/index.js bump --on-diff"
+  }
+}

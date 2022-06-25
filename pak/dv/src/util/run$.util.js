@@ -1,0 +1,54 @@
+import cp from 'node:child_process';
+import M from '../etc/mockaround.const.js';
+
+
+const WHITESPACE = /\s+/u;
+
+
+const parse = (
+
+    options => {
+
+        if (null === options || void (1) === options) {
+            return {
+                cmd:  '',
+                args: [],
+            };
+        }
+
+        if (String(options) !== options) {
+            return {
+                cmd:  options?.cmd ?? '',
+                args: options.args ?? [],
+            };
+        }
+
+        const [cmd, ...args] = options.split(WHITESPACE);
+        return {cmd, args};
+    }
+);
+
+
+const run$ = (
+
+
+    (options, /* istanbul ignore next */ mock = null) => new Promise(resolve => {
+
+        const {cmd, args} = parse(options);
+
+        if ('' === cmd) {
+            return void resolve(new Error(`Invalid command: "${cmd}" from options: ${String(options)}`));
+        }
+
+        const spawn = M ? mock?.spawn : /* istanbul ignore next */ cp.spawn;
+        const ps = spawn(cmd, args, {stdio: 'inherit'});
+
+        ps.addListener('error', $ => resolve(new Error($)));
+        ps.addListener('exit', () => resolve(null));
+
+        return void (1);
+    })
+
+);
+
+export default run$;
