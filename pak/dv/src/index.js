@@ -2,9 +2,9 @@
 
 /* eslint-disable import/max-dependencies */
 
-
+import bump$ from './cmd/bump$.cmd.js';
+import input$ from './core/input$.core.js';
 import FILE from './etc/file.const.js';
-import SEP from './etc/separator.const.js';
 import SPC from './etc/space.const.js';
 import alert$ from './util/alert$.util.js';
 import bail$ from './util/bail$.util.js';
@@ -18,59 +18,53 @@ import woe$ from './util/woe$.util.js';
 import write$ from './util/write$.util.js';
 
 
-// TODO: add proper test to get 100% coverage
 /* istanbul ignore next */
 try {
 
-    const ONE = 1n;
-    const SKIP = 2;
+    const {flg, cmd} = input$();
 
-    const ARG = process.argv.slice(SKIP);
-    const CMD = 'bump' === ARG[0] ? 'bump' : 'status';
-
-    const FLG = Object.freeze({
-        dry:    ARG.includes('--dry-run'),
-        quiet:  ARG.includes('--quiet'),
-        help:   ARG.includes('--help'),
-        diffed: ARG.includes('--on-diff'),
-    });
-
-    if (FLG.help) {
+    if (flg.help) {
+        // quit with help message
         help$();
         quit$();
     }
 
     const different = await run$('git diff --quiet --exit-code .');
-    if (FLG.diffed && !different) {
+    if (flg.diffed && !different) {
+        // quit silently
         quit$();
     }
 
-    const oldVer = woe$(await read$(FILE.ver));
-    const pkg = woe$(await read$(FILE.pkg));
-    const oldPkg = pkg?.version ?? '0.0.0+0';
+    const old = {
+        ver: woe$(await read$(FILE.ver)),
+        pkg: woe$(await read$(FILE.pkg)),
+    };
 
-    if ('status' === CMD) {
-        print$('ver:', canon(oldVer));
-        print$('pkg:', oldPkg);
+    if ('status' === cmd) {
+        // quit with status message
+        print$('ver:', canon(old.ver));
+        print$('pkg:', old.pkg.version);
         quit$();
     }
 
-    const [head, ...tail] = oldVer ?? [];
-    const newVer = [(BigInt(head) + ONE).toString(), ...(tail ?? [])];
+    if ('bump' === cmd) {
+        // quit with bump
+        const {pkg, ver} = bump$({ver: old.ver, pkg: old.pkg.version});
 
-    const newPkg = `${oldPkg.split(SEP.pls)[0]}${SEP.pls}${newVer[0]}`;
+        if (!flg.quiet) {
+            print$('ver:', canon(old.ver), '->', canon(ver));
+            print$('pkg:', old.pkg.version, '->', pkg);
+        }
 
-    if (!FLG.quiet) {
-        print$('ver:', canon(oldVer), '->', canon(newVer));
-        print$('pkg:', oldPkg, '->', newPkg);
+        if (!flg.dry) {
+            await write$(FILE.ver, SPC.ver, ver);
+            await write$(FILE.pkg, SPC.pkg, {...old.pkg, version: pkg});
+        }
+
+        quit$();
     }
 
-    if (!FLG.dry) {
-        await write$(FILE.ver, SPC.ver, newVer);
-        await write$(FILE.pkg, SPC.pkg, {...pkg, version: newPkg});
-    }
-
-} catch (e) {
+} catch (e) { // bail with error message
     alert$(e?.message ?? e);
     bail$();
 }

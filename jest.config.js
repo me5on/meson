@@ -23,17 +23,11 @@ export default ({
     collectCoverageFrom: ['pak/*/src/**/*.js'],
 
     coverageThreshold: {
-        global:             {
-            branches:   90,
-            functions:  90,
-            lines:      90,
-            statements: -90,
-        },
-        './pak/dv/**/*$.*': {
-            branches:   0,
-            functions:  0,
-            lines:      0,
-            statements: 0,
+        global: {
+            branches:   99,
+            functions:  99,
+            lines:      99,
+            statements: -9,
         },
     },
 
