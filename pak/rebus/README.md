@@ -1,4 +1,4 @@
-![](icon.png)
+![](doc/icon.png)
 
 # Rebus
 
@@ -87,7 +87,8 @@ console.log(re);
 ```
 
 results in:
-> /^npm-debug\.log$|^\..*\.swp$|^\.DS_Store$|^\.AppleDouble$|^\.LSOverride$|^Icon\r$|^\._.*|^\.Spotlight-V100(?:$|\/)|\.Trashes|^__MACOSX$|~$|^Thumbs\.db$|^ehthumbs\.db$|^Desktop\.ini$|@eaDir$/
+> /^npm-debug\.log$|^\..*\.swp$|^\.DS_Store$|^\.AppleDouble$|^\.LSOverride$|^Icon\r$|^\._.*|^\.Spotlight-V100(?:$|\/)
+> |\.Trashes|^__MACOSX$|~$|^Thumbs\.db$|^ehthumbs\.db$|^Desktop\.ini$|@eaDir$/
 
 ## ... use Unicode classes
 

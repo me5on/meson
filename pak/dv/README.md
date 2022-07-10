@@ -1,3 +1,3 @@
-![](icon.png)
+![](doc/icon.png)
 
 # DV

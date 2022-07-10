@@ -1,4 +1,4 @@
-![](icon.png)
+![](doc/icon.png)
 
 # OB
 
