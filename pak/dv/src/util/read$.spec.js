@@ -2,6 +2,7 @@
 // noinspection DuplicatedCode
 
 import {describe, expect, it, jest} from '@jest/globals';
+import mockaround from '@sloy/mockaround';
 import read$ from './read$.util.js';
 
 
@@ -24,8 +25,9 @@ describe('read$', () => {
         async (result, args, where, data) => {
 
             const readFile = jest.fn(() => Promise.resolve(data)).mockName('readFile');
+            mockaround({readFile}, read$);
 
-            const actual = await read$(where, {readFile});
+            const actual = await read$(where);
 
             expect(actual).toEqual(result);
             expect(readFile).toHaveBeenCalledWith(...args);
@@ -45,8 +47,9 @@ describe('read$', () => {
         async (message, args, where, data) => {
 
             const readFile = jest.fn(() => Promise.resolve(data)).mockName('readFile');
+            mockaround({readFile}, read$);
 
-            const actual = await read$(where, {readFile});
+            const actual = await read$(where);
 
             expect(actual).toBeInstanceOf(Error);
             expect(actual.message).toBe(message);
@@ -64,9 +67,10 @@ describe('read$', () => {
         'returns error with message %p after it calls readFile with invalid path %p',
         async (message, args, where) => {
 
-            const readFile = jest.fn(() => Promise.reject(new Error(message))).mockName('readFile');
+            const readFile = jest.fn(() => Promise.reject(new Error(message)));
+            mockaround({readFile}, read$);
 
-            const actual = await read$(where, {readFile});
+            const actual = await read$(where);
 
             expect(actual).toBeInstanceOf(Error);
             expect(actual.message).toBe(message);
@@ -75,6 +79,5 @@ describe('read$', () => {
 
         },
     );
-
 
 });

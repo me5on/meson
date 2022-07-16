@@ -2,6 +2,7 @@
 // noinspection DuplicatedCode
 
 import {describe, expect, it, jest} from '@jest/globals';
+import mockaround from '@sloy/mockaround';
 import run$ from './run$.util.js';
 
 
@@ -15,17 +16,17 @@ describe('run$', () => {
 
     it.each([
         // options, args
-        ['asdf', ['asdf', [], {stdio: 'inherit'}]],
-        ['cmd arg1 arg2', ['cmd', ['arg1', 'arg2'], {stdio: 'inherit'}]],
-    ])('runs with %p', async (options, args) => {
+        [1, 'asdf', ['asdf', [], {stdio: 'inherit'}]],
+        [0, 'cmd arg1 arg2', ['cmd', ['arg1', 'arg2'], {stdio: 'inherit'}]],
+    ])('runs with %p', async (code, options, args) => {
 
-        const addListener = jest.fn((ev, cb) => 'exit' === ev && cb(0)).mockName('addListener');
+        const addListener = jest.fn((ev, cb) => 'exit' === ev && cb(code)).mockName('addListener');
         const spawn = jest.fn(() => ({addListener})).mockName('spawn');
-        const mock = {spawn};
+        mockaround({spawn}, run$);
 
-        const actual = await run$(options, mock);
+        const actual = await run$(options);
 
-        expect(actual).toBe(null);
+        expect(actual).toBe(code);
         expect(spawn).toHaveBeenCalledWith(...args);
         expect(addListener).toHaveBeenCalledTimes(2);
 
@@ -45,9 +46,9 @@ describe('run$', () => {
 
             const addListener = jest.fn((ev, cb) => 'error' === ev && cb()).mockName('addListener');
             const spawn = jest.fn(() => ({addListener})).mockName('spawn');
-            const mock = {spawn};
+            mockaround({spawn}, run$);
 
-            const actual = await run$(options, mock);
+            const actual = await run$(options);
 
             expect(actual).toBeInstanceOf(Error);
             expect(spawn).not.toHaveBeenCalled();
@@ -66,9 +67,9 @@ describe('run$', () => {
 
             const addListener = jest.fn((ev, cb) => 'error' === ev && cb(result)).mockName('addListener');
             const spawn = jest.fn(() => ({addListener})).mockName('spawn');
-            const mock = {spawn};
+            mockaround({spawn}, run$);
 
-            const actual = await run$(options, mock);
+            const actual = await run$(options);
 
             expect(actual).toBeInstanceOf(Error);
             expect(actual.message).toBe(result);

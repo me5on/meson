@@ -1,11 +1,14 @@
-/* eslint-disable no-magic-numbers */
-import {describe, expect, it} from '@jest/globals';
+/* eslint-disable max-statements-per-line,max-lines-per-function,no-magic-numbers */
+// noinspection JSCheckFunctionSignatures,JSUnresolvedFunction,DuplicatedCode
+
+import {describe, expect, it, jest} from '@jest/globals';
+import mockaround from '@sloy/mockaround';
+import read$ from '../util/read$.util.js';
+import write$ from '../util/write$.util.js';
 import bump$ from './bump$.cmd.js';
 
 
-const BIG_A = BigInt(Number.MAX_VALUE) + 1n;
-const BIG_B = BIG_A + 1n;
-const BIG_S = BIG_B.toString();
+const noop = () => void 1;
 
 
 describe('bump$', () => {
@@ -15,28 +18,202 @@ describe('bump$', () => {
         () => void expect(bump$).toBeFun(),
     );
 
-    // noinspection SpellCheckingInspection
+
     it.each([
-        // result, options
-        [{ver: ['1'], pkg: '0.0.0+1'}, void (1)],
-        [{ver: ['1'], pkg: '0.0.0+1'}, null],
-        [{ver: ['1'], pkg: '0.0.0+1'}, []],
-        [{ver: ['1'], pkg: '0.0.0+1'}, {}],
-        [{ver: ['16'], pkg: '0.0.0+16'}, {ver: '15'}],
-        [{ver: ['1'], pkg: '15+1'}, {pkg: '15'}],
-        [{ver: ['9'], pkg: '3+9'}, {ver: '8', pkg: '3'}],
-        [{ver: [BIG_S], pkg: `4+${BIG_S}`}, {ver: BIG_A, pkg: '4'}],
-        [{ver: ['10'], pkg: '6.7.8+10'}, {ver: '9', pkg: '6.7.8'}],
-        [{ver: ['20', 18, 17], pkg: '6.7.8+20'}, {ver: [19, 18, 17], pkg: '6.7.8'}],
-        [{ver: ['1', 'a', 'b', 'c'], pkg: 'd.e.f+1'}, {ver: ['a', 'b', 'c'], pkg: 'd.e.f'}],
-        [{ver: ['34', 'v'], pkg: 'p+34'}, {ver: ['33', 'v'], pkg: 'p+33'}],
-        [{ver: ['56', [1, 'a'], [2, 'b']], pkg: '1.2+56'}, {ver: ['55', [1, 'a'], [2, 'b']], pkg: '1.2+55'}],
-        [{ver: ['1', '-1'], pkg: '-1+1'}, {ver: '-1', pkg: '-1'}],
-        [{ver: ['1'], pkg: 'a.b.c+1'}, {ver: [], pkg: 'a.b.c'}],
-        [{ver: ['1', 2], pkg: 'a.b.c+1'}, {ver: [null, 2], pkg: 'a.b.c'}],
+        // new1, old1, input, output
+        [
+            {ver: '2.2', pkg: 'a.b.c+2'},
+            {ver: '1.2', pkg: 'a.b.c+1'},
+            {ver: '["1",2]', pkg: '{"version":"a.b.c+1"}'},
+            {ver: '[\n    "2",\n    2\n]', pkg: '{\n  "version": "a.b.c+2"\n}'},
+        ],
     ])(
-        'returns bump$d string %p for %p',
-        expect(bump$).toMapEqual,
+        'bumps to %p from %p, prints %p, saves %p and exits',
+        async (new1, old1, input, output) => {
+
+            const writeFile = jest.fn(() => Promise.reject()).mockName('writeFile');
+            const readFile = jest.fn(where => {
+                // @formatter:off
+                if (where?.endsWith('ver.json')) {return Promise.resolve(input.ver);}
+                if (where?.endsWith('package.json')) {return Promise.resolve(input.pkg);}
+                return Promise.resolve('');
+                // @formatter:on
+            }).mockName('readFile');
+
+            mockaround({readFile}, read$);
+            mockaround({writeFile}, write$);
+
+            const log = jest.spyOn(console, 'log').mockImplementation(noop).mockName('log');
+            const err = jest.spyOn(console, 'error').mockImplementation(noop).mockName('err');
+            const exit = jest.spyOn(process, 'exit').mockImplementation(noop).mockName('exit');
+
+            await bump$();
+
+            expect(err).not.toHaveBeenCalled();
+            expect(log.mock.calls).toEqual([
+                ['dv:', 'ver:', old1.ver, '->', new1.ver],
+                ['dv:', 'pkg:', old1.pkg, '->', new1.pkg],
+            ]);
+
+            expect(writeFile.mock.calls).toEqual([
+                [expect.any(String), output.ver],
+                [expect.any(String), output.pkg],
+            ]);
+
+            expect(readFile).toHaveBeenCalledTimes(2);
+            expect(exit).toHaveBeenCalledTimes(1);
+            expect(exit).toHaveBeenCalledWith(0);
+
+        }
+    );
+
+    it.each([
+        // new1, old1, input, flg
+        [
+            {ver: '3', pkg: '0.0.0+3'},
+            {ver: '2', pkg: ''},
+            {ver: '["2"]', pkg: '{"version":""}'},
+            {dry: true},
+        ],
+    ])(
+        'bumps to %p from %p, prints %p, does not save and exits',
+        async (new1, old1, input, flg) => {
+
+            const writeFile = jest.fn(() => Promise.reject()).mockName('writeFile');
+            const readFile = jest.fn(where => {
+                // @formatter:off
+                if (where?.endsWith('ver.json')) {return Promise.resolve(input.ver);}
+                if (where?.endsWith('package.json')) {return Promise.resolve(input.pkg);}
+                return Promise.resolve('');
+                // @formatter:on
+            }).mockName('readFile');
+
+            mockaround({readFile}, read$);
+            mockaround({writeFile}, write$);
+
+            const log = jest.spyOn(console, 'log').mockImplementation(noop).mockName('log');
+            const err = jest.spyOn(console, 'error').mockImplementation(noop).mockName('err');
+            const exit = jest.spyOn(process, 'exit').mockImplementation(noop).mockName('exit');
+
+            await bump$(flg);
+
+            expect(err).not.toHaveBeenCalled();
+            expect(log.mock.calls).toEqual([
+                ['dv:', 'ver:', old1.ver, '->', new1.ver],
+                ['dv:', 'pkg:', old1.pkg, '->', new1.pkg],
+            ]);
+
+            expect(writeFile).not.toHaveBeenCalled();
+            expect(readFile).toHaveBeenCalledTimes(2);
+            expect(exit).toHaveBeenCalledTimes(1);
+            expect(exit).toHaveBeenCalledWith(0);
+
+        }
+    );
+
+    it.each([
+        // input, flg
+        [
+            {ver: '["2"]', pkg: '{"version":""}'},
+            {dry: true, quiet: true},
+        ],
+    ])(
+        'bumps to %p from %p, does not print, does not save and exits',
+        async (input, flg) => {
+
+            const writeFile = jest.fn(() => Promise.reject()).mockName('writeFile');
+            const readFile = jest.fn(where => {
+                // @formatter:off
+                if (where?.endsWith('ver.json')) {return Promise.resolve(input.ver);}
+                if (where?.endsWith('package.json')) {return Promise.resolve(input.pkg);}
+                return Promise.resolve('');
+                // @formatter:on
+            }).mockName('readFile');
+
+            mockaround({readFile}, read$);
+            mockaround({writeFile}, write$);
+
+            const log = jest.spyOn(console, 'log').mockImplementation(noop).mockName('log');
+            const err = jest.spyOn(console, 'error').mockImplementation(noop).mockName('err');
+            const exit = jest.spyOn(process, 'exit').mockImplementation(noop).mockName('exit');
+
+            await bump$(flg);
+
+            expect(err).not.toHaveBeenCalled();
+            expect(log).not.toHaveBeenCalled();
+            expect(writeFile).not.toHaveBeenCalled();
+            expect(readFile).toHaveBeenCalledTimes(2);
+            expect(exit).toHaveBeenCalledTimes(1);
+            expect(exit).toHaveBeenCalledWith(0);
+
+        }
+    );
+
+    it.each([
+        // flg
+        {},
+        {quiet: true},
+    ])(
+        'handles invalid result for flg %p, then exits',
+        async flg => {
+
+            const readFile = jest.fn(() => Promise.reject()).mockName('readFile');
+            mockaround({readFile}, read$);
+
+            const writeFile = jest.fn(() => Promise.reject()).mockName('writeFile');
+            mockaround({writeFile}, write$);
+
+            const log = jest.spyOn(console, 'log').mockImplementation(noop).mockName('log');
+            const err = jest.spyOn(console, 'error').mockImplementation(noop).mockName('err');
+            const exit = jest.spyOn(process, 'exit').mockImplementation(noop).mockName('exit');
+
+            await bump$(flg);
+
+            if (flg.quiet) {
+                expect(err).not.toHaveBeenCalled();
+            } else {
+                expect(err).toHaveBeenCalledWith('dv:', 'invalid ver:', void (1));
+            }
+
+            expect(log).not.toHaveBeenCalled();
+            expect(writeFile).not.toHaveBeenCalled();
+
+            expect(readFile).toHaveBeenCalledTimes(2);
+            expect(exit).toHaveBeenCalledTimes(1);
+            expect(exit).toHaveBeenCalledWith(1);
+
+        },
+    );
+
+    it(
+        'just exits on error',
+        async () => {
+
+            const MESSAGE = 'some error happened';
+            const readFile = jest.fn(() => Promise.reject(new Error(MESSAGE))).mockName('readFile');
+            mockaround({readFile}, read$);
+
+            const writeFile = jest.fn(() => Promise.reject()).mockName('writeFile');
+            mockaround({writeFile}, write$);
+
+            const log = jest.spyOn(console, 'log').mockImplementation(noop).mockName('log');
+            const exit = jest.spyOn(process, 'exit').mockImplementation(noop).mockName('exit');
+
+            try {
+                await bump$();
+                expect('this test').toBe('fail');
+            } catch (e) {
+
+                expect(e).toBeInstanceOf(Error);
+                expect(e.message).toBe(MESSAGE);
+
+                expect(readFile).toHaveBeenCalledTimes(1);
+                expect(writeFile).not.toHaveBeenCalled();
+                expect(log).not.toHaveBeenCalled();
+                expect(exit).not.toHaveBeenCalled();
+            }
+
+        },
     );
 
 });

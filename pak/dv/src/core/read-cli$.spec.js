@@ -2,16 +2,16 @@
 // noinspection JSConsecutiveCommasInArrayLiteral
 
 import {describe, expect, it} from '@jest/globals';
-import input$ from './input$.core.js';
+import readCli$ from './read-cli$.core.js';
 
 
 // eslint-disable-next-line max-lines-per-function
-describe('input$', () => {
+describe('readCli$', () => {
 
     // noinspection JSUnresolvedFunction
     it(
         'is a function',
-        () => void expect(input$).toBeFun(),
+        () => void expect(readCli$).toBeFun(),
     );
 
 
@@ -50,10 +50,18 @@ describe('input$', () => {
             },
             [, , 'bump', '--quiet', '--on-diff', '--dry-run', '--help'],
         ],
+        [
+            {
+                cmd: 'help',
+                arg: ['help', '--quiet', '--on-diff', '--dry-run'],
+                flg: {diffed: true, dry: true, help: false, quiet: true},
+            },
+            [, , 'help', '--quiet', '--on-diff', '--dry-run'],
+        ],
     ])('return %p for process.argv of %p', (result, argv) => {
 
         global.process.argv = argv;
-        expect(input$()).toEqual(result);
+        expect(readCli$()).toEqual(result);
     });
 
 });

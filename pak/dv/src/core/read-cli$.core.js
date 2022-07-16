@@ -1,12 +1,21 @@
 const SKIP = 2;
 
 
-const input$ = (
+const readCli$ = (
 
     () => {
 
         const arg = process.argv.slice(SKIP);
-        const cmd = 'bump' === arg[0] ? 'bump' : 'status';
+        const cmd = (
+
+            'bump' === arg[0]
+                ? 'bump'
+                : (
+                    'help' === arg[0]
+                        ? 'help'
+                        : 'status'
+                )
+        );
 
         const flg = Object.freeze({
             dry:    arg.includes('--dry-run'),
@@ -23,4 +32,4 @@ const input$ = (
 
 
 // noinspection JSUnusedGlobalSymbols
-export default input$;
+export default readCli$;

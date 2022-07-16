@@ -1,24 +1,19 @@
 import fs from 'node:fs/promises';
-import M from '../etc/mockaround.const.js';
+import mockaround from '@sloy/mockaround';
 
 
-const read$ = (
+const read$ = mockaround(fs, async (where, /* istanbul ignore next */ {readFile} = null) => {
 
-    async (where, mock) => {
-        const readFile = M ? mock?.readFile : /* istanbul ignore next */ fs.readFile;
+    try {
+        const buffer = await readFile(where);
+        const text = buffer.toString();
 
-        try {
-
-            const buffer = await readFile(where);
-            const text = buffer.toString();
-
-            return JSON.parse(text);
-        } catch (e) {
-            return e;
-        }
+        return JSON.parse(text);
+    } catch (e) {
+        return e;
     }
 
-);
+});
 
 
 // noinspection JSUnusedGlobalSymbols

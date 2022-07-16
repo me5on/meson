@@ -1,24 +1,19 @@
 import fs from 'node:fs/promises';
-import M from '../etc/mockaround.const.js';
+import mockaround from '@sloy/mockaround';
 
 
-const write$ = (
+const write$ = mockaround(fs, async (where, space, what, /* istanbul ignore next */ {writeFile} = null) => {
 
-    async (where, space, what, /* istanbul ignore next */ mock = null) => {
+    try {
+        const data = JSON.stringify(what, null, space);
+        await writeFile(where, data);
 
-        const writeFile = M ? mock?.writeFile : /* istanbul ignore next */ fs.writeFile;
-
-        try {
-            const data = JSON.stringify(what, null, space);
-            await writeFile(where, data);
-
-            return null;
-        } catch (e) {
-            return e;
-        }
+        return null;
+    } catch (e) {
+        return e;
     }
 
-);
+});
 
 
 // noinspection JSUnusedGlobalSymbols

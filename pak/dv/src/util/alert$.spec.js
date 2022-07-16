@@ -30,7 +30,7 @@ describe('alert$', () => {
 
             alert$($);
 
-            expect(mock).toBeCalledWith('bump:', $);
+            expect(mock).toBeCalledWith('dv:', $);
         },
     );
 

@@ -2,6 +2,7 @@
 // noinspection DuplicatedCode
 
 import {describe, expect, it, jest} from '@jest/globals';
+import mockaround from '@sloy/mockaround';
 import write$ from './write$.util.js';
 
 
@@ -20,9 +21,10 @@ describe('write$', () => {
         [['file', '{\n  "a": 1\n}'], ['file', 2, {a: 1}]],
     ])('calls writeFile with %p for options %p', async (args, [where, space, what]) => {
 
-        const writeFile = jest.fn(() => Promise.resolve()).mockName('writeFile');
+        const writeFile = jest.fn(() => Promise.resolve());
+        mockaround({writeFile}, write$);
 
-        const actual = await write$(where, space, what, {writeFile});
+        const actual = await write$(where, space, what);
 
         expect(actual).toBe(null);
         expect(writeFile).toHaveBeenCalledWith(...args);
@@ -40,9 +42,10 @@ describe('write$', () => {
         'returns error with message %p after it calls writeFile with %p for options %p',
         async (message, args, [where, space, what]) => {
 
-            const writeFile = jest.fn(() => Promise.reject(new Error(message))).mockName('writeFile');
+            const writeFile = jest.fn(() => Promise.reject(new Error(message)));
+            mockaround({writeFile}, write$);
 
-            const actual = await write$(where, space, what, {writeFile});
+            const actual = await write$(where, space, what);
 
             expect(actual).toBeInstanceOf(Error);
             expect(actual.message).toBe(message);

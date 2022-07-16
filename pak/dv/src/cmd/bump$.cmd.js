@@ -1,60 +1,46 @@
-import SEP from '../etc/separator.const.js';
-
-
-const {pls: PLUS} = SEP;
-
-
-const ZERO = 0n;
-const ONE = 1n;
-
-
-const DEFAULT = '0.0.0+0';
-
-
-const parse = (
-
-    v => {
-
-        const [head, ...tail] = (
-            Array.isArray(v)
-                ? v
-                : [v ?? '']
-        );
-
-        // head must be cast-able to BigInt and must be non-negative
-        try {
-
-            const result = BigInt(head ?? 0);
-            if (0 <= result) {
-                return {tail, head: result};
-            }
-
-            tail.unshift(head);
-            return {tail, head: ZERO};
-
-        } catch (e) {
-            tail.unshift(head);
-            return {tail, head: ZERO};
-        }
-
-    }
-
-);
+import bumpVersions$ from '../core/bump-versions$.core.js';
+import readOld$ from '../core/read-old$.core.js';
+import FILE from '../etc/file.const.js';
+import SPC from '../etc/space.const.js';
+import alert$ from '../util/alert$.util.js';
+import bail$ from '../util/bail$.util.js';
+import canon from '../util/canon.util.js';
+import print$ from '../util/print$.util.js';
+import quit$ from '../util/quit$.util.js';
+import write$ from '../util/write$.util.js';
 
 
 const bump$ = (
 
-    $ => {
+    async flg => {
 
-        const {head, tail} = parse($?.ver);
-        const suffix = (head + ONE).toString();
-        const [prefix] = ($?.pkg || DEFAULT).split(PLUS);
+        const quiet = flg?.quiet;
+        const dry = flg?.dry;
 
-        return {
-            ver: [suffix, ...tail],
-            pkg: `${prefix}${PLUS}${suffix}`,
-        };
+        const {pkg: fullPkg, ver: oldVer} = await readOld$();
 
+        if (!oldVer) {
+            if (!quiet) {
+                alert$('invalid ver:', (oldVer));
+            }
+            return void bail$();
+        }
+
+        const oldPkg = fullPkg?.version;
+
+        const {pkg: newPkg, ver: newVer} = bumpVersions$({ver: oldVer, pkg: oldPkg});
+
+        if (!quiet) {
+            print$('ver:', canon(oldVer), '->', canon(newVer));
+            print$('pkg:', oldPkg, '->', newPkg);
+        }
+
+        if (!dry) {
+            await write$(FILE.ver, SPC.ver, newVer);
+            await write$(FILE.pkg, SPC.pkg, {...fullPkg, version: newPkg});
+        }
+
+        return void quit$();
     }
 
 );

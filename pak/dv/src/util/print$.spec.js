@@ -30,7 +30,7 @@ describe('print$', () => {
 
             print$($);
 
-            expect(mock).toBeCalledWith('bump:', $);
+            expect(mock).toBeCalledWith('dv:', $);
         },
     );
 

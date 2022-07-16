@@ -1,13 +1,13 @@
-// noinspection JSCheckFunctionSignatures
-
+// noinspection JSCheckFunctionSignatures,JSUnresolvedFunction
 
 import {describe, expect, it, jest} from '@jest/globals';
-import help$ from './help$.util.js';
+import help$ from './help$.cmd.js';
 
 
 const noop = () => void (1);
 
-const HELP = `
+
+const MESSAGE = `
 $ npx dv                # to display current status
 $ npx dv status         # to display current status
 $ npx dv --help         # to display this help message
@@ -29,14 +29,17 @@ describe('help$', () => {
 
 
     it(
-        'displays help information',
+        'displays help information then exits',
         () => {
 
-            const mock = jest.spyOn(console, 'log').mockImplementation(() => noop);
+            const log = jest.spyOn(console, 'log').mockImplementation(() => noop).mockName('log');
+            const exit = jest.spyOn(process, 'exit').mockImplementation(noop).mockName('exit');
 
             help$();
 
-            expect(mock).toBeCalledWith(HELP);
+            expect(log).toBeCalledWith(MESSAGE);
+            expect(exit).toHaveBeenCalledTimes(1);
+            expect(exit).toHaveBeenCalledWith(0);
         },
     );
 
