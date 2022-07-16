@@ -16,10 +16,9 @@ import run$ from './util/run$.util.js';
 import woe$ from './util/woe$.util.js';
 
 
-// /* istanbul ignore next */
+/* istanbul ignore next */
 try {
 
-    /* istanbul ignore next */
     const testDiff = async ({flg: {diffed, quiet}}) => {
 
         if (!diffed) {

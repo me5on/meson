@@ -1,6 +1,6 @@
 {
   "name": "@me5on/crayon",
-  "version": "0.0.1+24",
+  "version": "0.0.1+26",
   "description": "crayon color console",
   "type": "module",
   "main": "./src/index.js",
@@ -15,6 +15,6 @@
     "@me5on/rebus": "^0.0.2+20"
   },
   "scripts": {
-    "bump": "node ../dv/src/index.js bump --on-diff"
+    "bump": "node ../dv/src/index.js bump"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@me5on/fn",
-  "version": "0.1.0+39",
+  "version": "0.1.0+41",
   "description": "FN",
   "repository": "https://github.com/me5on/fn",
   "author": {
@@ -14,6 +14,6 @@
   "main": "./src/index.js",
   "exports": "./src/index.js",
   "scripts": {
-    "bump": "node ../dv/src/index.js bump --on-diff"
+    "bump": "node ../dv/src/index.js bump"
   }
 }

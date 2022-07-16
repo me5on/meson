@@ -1,6 +1,6 @@
 {
   "name": "@me5on/rebus",
-  "version": "0.0.2+23",
+  "version": "0.0.2+25",
   "description": "",
   "type": "module",
   "main": "./src/index.js",
@@ -12,7 +12,7 @@
   "keywords": [],
   "license": "MIT",
   "scripts": {
-    "bump": "node ../dv/src/index.js bump --on-diff"
+    "bump": "node ../dv/src/index.js bump"
   },
   "dependencies": {
     "@me5on/fn": "^0.1.0+36",

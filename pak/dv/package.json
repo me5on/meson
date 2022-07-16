@@ -1,6 +1,6 @@
 {
   "name": "@me5on/dv",
-  "version": "0.0.3+26",
+  "version": "0.0.3+28",
   "description": "DV",
   "type": "module",
   "main": "./src/index.js",
@@ -14,6 +14,6 @@
   "license": "MIT",
   "repository": "https://github.com/me5on/dv",
   "scripts": {
-    "bump": "node ./src/index.js bump --on-diff"
+    "bump": "node ./src/index.js bump"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@me5on/martis",
-  "version": "0.0.2+11",
+  "version": "0.0.2+13",
   "description": "",
   "type": "module",
   "main": "./src/index.js",
@@ -13,7 +13,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "bump": "node ../dv/src/index.js bump --on-diff"
+    "bump": "node ../dv/src/index.js bump"
   },
   "dependencies": {
     "@me5on/is": "^0.0.8"
