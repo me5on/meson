@@ -8,6 +8,7 @@ import dv$ from './core/dv$.core.js';
 import readCli$ from './core/read-cli$.core.js';
 import alert$ from './util/alert$.util.js';
 import bail$ from './util/bail$.util.js';
+import print$ from './util/print$.util.js';
 import quit$ from './util/quit$.util.js';
 import run$ from './util/run$.util.js';
 
@@ -15,17 +16,23 @@ import run$ from './util/run$.util.js';
 /* istanbul ignore next */
 try {
 
-    const testDiff = async ({flg: {diffed}}) => {
+    const testDiff = async ({flg: {diffed, quiet}}) => {
 
-        const exitCode = await run$('git diff --quiet --exit-code .');
+        if (!diffed) {
+            return false;
+        }
 
-        const bail = diffed && !exitCode;
-        
-        console.log('testDiff()', bail ? 'exit' : 'run', {exitCode, diffed});
+        const command = 'git diff --quiet --exit-code .';
+        const exitCode = await run$(command);
 
-        return bail;
+        if (!quiet) {
+            print$('command "', command, '" returned code', exitCode, exitCode ? 'will continue' : 'will now exit');
+        }
+
+        return !exitCode;
 
     };
+
     const testHelp = ({cmd, flg: {help}}) => Promise.resolve('help' === cmd || help);
 
     await dv$(
